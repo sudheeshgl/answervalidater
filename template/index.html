@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Rank List</title>
+    <style>
+        body{
+            margin:0px;
+            padding:0px;
+            font-family:Sans-serif	;
+        }
+        header{
+        background-color:#f05454;
+        height:100px;
+        padding-top:20px;
+        text-align:center;
+        align-item:center;
+        border-bottom: 25px solid #222831;
+        }
+        h1{
+                align-item:center;
+                font-size:50px;
+        }
+        .container{
+            display:flex;
+            margin-left:50px;
+        }
+        input{
+            font-size:20px;
+            padding:10px;
+            width:300px;
+        }
+        label{
+        font-size:20px;
+        font-weight:bold;
+        }
+
+        .container-options{
+        display:flex;
+        flex-direction:column;
+        margin:20px;
+        }
+        .buttons{
+        background:#222831;
+        color:white;
+        border:none;
+        transition:0.3s ;
+        margin-bottom:20px;
+        margin-left:10px;
+        }
+        .buttons:hover{
+            background:#f05454;
+        }
+        .container2,.container1{
+   display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+        }
+        #customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.students td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.students tr:nth-child(even){background-color: #f2f2f2;}
+
+.students tr:hover {background-color: #ddd;}
+table{
+margin-left:100px;
+width:1700px;
+
+}
+.students th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #222831;
+  color: white;
+}
+    </style>
+</head>
+<body>
+<div class="MainHeader">
+    <header>
+        <h1>Exam</h1>
+    </header>
+</div>
+<form action="calculate" method="post" enctype="multipart/form-data" id="answerform">
+    {% csrf_token %}
+    <div class="container">
+    <div class="container-options">
+            <label>Max 1000</label>
+            <input type="text" placeholder="Total Students" id="totalstudents" name="totalstudents">
+    </div>
+
+    <div class="container-options">
+            <label>Questions</label>
+            <input type="text" placeholder="No of Questions" id="noofquestions" name="noofquestions">
+    </div>
+    <div class="container-options">
+            <label>In the form of 3,4,3 </label>
+            <input type="text" placeholder="Question Categories" id="categories" name="categories">
+    </div>
+    <div class="container-options">
+            <label>Students Answer Sheet</label>
+            <input type="file" name="studnetAnswerSheet" accept=".csv">
+    </div>
+    <div class="container-options">
+            <label>Answer Sheet</label>
+            <input type="file" name="AnswerSheet" accept=".csv">
+    </div><br>
+</div>
+<div class="container1">
+        <input type="button" value="Calculate" class="buttons" onclick="check()">
+</div>
+<div class="container2" >
+            <input type="button" value="Total" class="buttons"  id="totalbutton" onclick="clicking('total')">
+            {% for i in count %}
+            <input type="button" value="Section {{i}}" class="buttons" id="buttons{{i}}" onclick="clicking('studnets{{i}}')">
+            {% endfor %}
+
+</div>
+</form>
+<div id="total" style="display:none">
+    <table class="students" >
+  <tr>
+    <th>No</th>
+    <th>Register No</th>
+    <th>Name</th>
+    <th>Correct Answer</th>
+    <th>Negative Mark</th>
+    <th>Total</th>
+    <th>Rank</th>
+  </tr>
+{% for i in totalrank %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{ i.1}}</td>
+    <td>{{ i.2.0}}</td>
+    <td>{{ i.2.3}}</td>
+    <td>{{ i.2.4}}</td>
+    <td>{{ i.2.6}}</td>
+      {% if i.2.6 != 0.0 and  i.2.6 > 0 %}
+        <td>{{forloop.counter}}</td>
+      {% else %}
+        <td>-</td>
+      {% endif %}
+
+  </tr>
+{% endfor %}
+</table>
+
+</div>
+<div id="studnets1" style="display:none;">
+    <table class="students">
+  <tr>
+    <th>No</th>
+    <th>Register No</th>
+    <th>Name</th>
+    <th>Correct Answer</th>
+    <th>Negative Mark</th>
+    <th>Total</th>
+    <th>Rank</th>
+  </tr>
+{% for i in categories.0 %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{ i.1}}</td>
+    <td>{{ i.2.0}}</td>
+    <td>{{ i.2.1.0}}</td>
+    <td>{{ i.2.2.0}}</td>
+    <td>{{ i.2.7.0}}</td>
+      {% if i.2.7.0 != 0.0 and  i.2.7.0 > 0 %}
+        <td>{{forloop.counter}}</td>
+      {% else %}
+        <td>-</td>
+      {% endif %}
+
+  </tr>
+{% endfor %}
+</table>
+</div>
+
+<div style="display:none;" id="studnets2">
+    <table class="students" >
+  <tr>
+    <th>No</th>
+    <th>Register No</th>
+    <th>Name</th>
+    <th>Correct Answer</th>
+    <th>Negative Mark</th>
+    <th>Total</th>
+    <th>Rank</th>
+  </tr>
+{% for i in categories.1 %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{ i.1}}</td>
+    <td>{{ i.2.0}}</td>
+    <td>{{ i.2.1.1}}</td>
+    <td>{{ i.2.2.1}}</td>
+    <td>{{ i.2.7.1}}</td>
+      {% if i.2.7.1 != 0.0 and  i.2.7.1 > 0 %}
+        <td>{{forloop.counter}}</td>
+      {% else %}
+        <td>-</td>
+      {% endif %}
+
+  </tr>
+{% endfor %}
+</table>
+
+</div>
+<div style="display:none;" id="studnets3">
+    <table class="students" >
+  <tr>
+    <th>No</th>
+    <th>Register No</th>
+    <th>Name</th>
+    <th>Correct Answer</th>
+    <th>Negative Mark</th>
+    <th>Total</th>
+    <th>Rank</th>
+  </tr>
+{% for i in categories.2 %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{ i.1}}</td>
+    <td>{{ i.2.0}}</td>
+    <td>{{ i.2.1.2}}</td>
+    <td>{{ i.2.2.2}}</td>
+    <td>{{ i.2.7.2}}</td>
+      {% if i.2.7.2 != 0.0 and  i.2.7.2 > 0 %}
+        <td>{{forloop.counter}}</td>
+      {% else %}
+        <td>-</td>
+      {% endif %}
+
+  </tr>
+{% endfor %}
+</table>
+</div>
+
+
+</body>
+</html>
+<script>
+function check(){
+
+if (document.getElementById('totalstudents').value=="" || document.getElementById('noofquestions').value=="" || document.getElementById('categories').value=="" )
+{
+alert('The Field is empty');
+preventDefault()
+}
+
+document.getElementById("answerform").submit();
+console.log(1);
+document.getElementById("container2").style.display="block";
+
+}
+function clicking(id){
+    document.getElementById('total').style.display='none';
+    document.getElementById('studnets1').style.display='none';
+    document.getElementById('studnets2').style.display='none';
+    document.getElementById('studnets3').style.display='none';
+
+    document.getElementById(id).style.display='block';
+}
+</script>
